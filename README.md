@@ -1,11 +1,11 @@
 # Crazy_Ball
 Crazy Ball is a simple arcade game, similar to the famous DX-Ball game. Here, instead of just one slider, the player has to take control of two sliders.
 
-<b>Controls</b>
-w - up
-s - down
+<b>Controls</b><br>
+w - up<br>
+s - down<br>
 
-left-arrow-key - left
+left-arrow-key - left<br>
 right-arrow-kry -  right
 
 This game was made in Python using PyGame module.
