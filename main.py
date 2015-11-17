@@ -76,18 +76,11 @@ while not gameExit:
 	elif dx<=0 and ball_x<=cur_x_1+40 and ball_x>=cur_x_1 and ball_y==cur_y_1:
 		dx*=1
 		dy*=-1
-	if dy>=0 and ball_x==50 and ball_y<=cur_y_2+40 and ball_y>=cur_y_2:
+
+	if ball_x==50 and ball_y<=cur_y_2+80 and ball_y>=cur_y_2:
 		dx*=-1
 		dy*=1
-	elif dy<0 and ball_x==50 and ball_y>=cur_y_2+40 and ball_y<=cur_y_2+80:
-		dx*=-1
-		dy*=1
-	elif dy<0 and ball_x==50 and ball_y>=cur_y_2+40 and ball_y<=cur_y_2+80:
-		dx*=-1
-		dy*=1	
-	elif dy>=0 and ball_x==50 and ball_y>=cur_y_2+40 and ball_y<=cur_y_2+80:
-		dx*=-1
-		dy*=1
+
 	if ball_x<=0: 
 		gameExit = True
 		print "You lose"
@@ -104,6 +97,6 @@ while not gameExit:
 	gameDisplay.blit(slider2, (cur_x_2, cur_y_2))
 	pygame.draw.circle(gameDisplay, (100,90,90),(ball_x,ball_y),10,0)
 	pygame.display.update()
-	fps.tick(30)
+	fps.tick(60)
 pygame.quit()
 quit()
