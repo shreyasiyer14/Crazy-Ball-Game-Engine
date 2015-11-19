@@ -1,4 +1,5 @@
 import pygame
+import random
 from Brick import *
 
 pygame.init()
@@ -54,11 +55,24 @@ brickList = []
 for y in range(len(level)):
     for x in range(len(level[y])):
         if (level[y][x] == 1):
-            brickList.append(Brick(x*32, y*32))
+		if y==2:
+            		brickList.append(Brick(x*32, y*32,(0,0,255)))
+		if y==3:
+            		brickList.append(Brick(x*32, y*32,(0,155,105)))
+		if y==4:
+            		brickList.append(Brick(x*32, y*32,(155,0,55)))
+		if y==5:
+            		brickList.append(Brick(x*32, y*32,(155,0,155)))
+		if y==6:
+            		brickList.append(Brick(x*32, y*32,(155,155,5)))
+		if y==7:
+            		brickList.append(Brick(x*32, y*32,(25,255,5)))
+		if y==8:
+            		brickList.append(Brick(x*32, y*32,(225,205,105)))
 
 
-ball_x=400
-ball_y=300
+ball_x=300
+ball_y=400
 dx=10
 dy=10
 while not gameExit:
@@ -67,18 +81,18 @@ while not gameExit:
 			gameExit = True
 		if event.type == pygame.KEYDOWN:
 			if event.key == pygame.K_LEFT:
-				x_change_1=-10
+				x_change_1=-20
 				y_change_1=0
 			elif event.key == pygame.K_RIGHT:
-				x_change_1=10
+				x_change_1=20
 				y_change_1=0
 			
 			elif event.key == pygame.K_w:
 				x_change_2=0
-				y_change_2=-10
+				y_change_2=-20
 			elif event.key == pygame.K_s:
 				x_change_2=0
-				y_change_2=10
+				y_change_2=20
 
 		if event.type == pygame.KEYUP:
 			if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
@@ -94,11 +108,10 @@ while not gameExit:
    	cur_x_2+=x_change_2
 	cur_y_2+=y_change_2
 	
-	ball_x+=dx
-	ball_y+=dy
 
-    def detectCollisions(self, x1,y1,w1,h1,x2,y2,w2,h2):
-            if (x2+w2>=x1>=x2 and y2+h2>=y1>=y2):
+        def detectCollisions(x1,y1,w1,h1,x2,y2,w2,h2):
+	    
+	    if (x2+w2>=x1>=x2 and y2+h2>=y1>=y2):
                 return True
         
             elif (x2+w2>=x1+w1>=x2 and y2+h2>=y1>=y2):
@@ -110,8 +123,6 @@ while not gameExit:
             elif (x2+w2>=x1+w1>=x2 and y2+h2>=y1+h1>=y2):
                 return True
         
-            else:
-                return False
 
 
 	if dx>=0 and ball_x>=cur_x_1 and ball_x<=cur_x_1+40 and ball_y==cur_y_1:
@@ -144,17 +155,20 @@ while not gameExit:
 
 
 
+	ball_x+=dx
+	ball_y+=dy
 	gameDisplay.fill(white)
-
-    gameDisplay.blit(slider, (cur_x_1, cur_y_1))
-    gameDisplay.blit(slider2, (cur_x_2, cur_y_2))
-    pygame.draw.circle(gameDisplay, (100,90,90),(ball_x,ball_y),10,0)
-    for brick in brickList:
-        if detectCollisions(ball_x, ball_y, 10,10,brick.x, brick.y, brick.width, brick.height):
-            blockList.pop(brick)
-    
-    for brick in brickList:
-        brick.render(gameDisplay)
+ 	gameDisplay.blit(slider, (cur_x_1, cur_y_1))
+   	gameDisplay.blit(slider2, (cur_x_2, cur_y_2))
+   	for brick in brickList:
+		
+   	     if detectCollisions(ball_x, ball_y, 10,10,brick.x, brick.y, brick.width, brick.height):
+        	    brickList.remove(brick)
+		    dy *= -1
+		    ball_y+=dy
+   	pygame.draw.circle(gameDisplay, (100,90,90),(ball_x,ball_y),10,0)
+	for brick in brickList:
+        	brick.render(gameDisplay)
 
 	pygame.display.update()
 	fps.tick(60)
