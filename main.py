@@ -108,22 +108,19 @@ while not gameExit:
    	cur_x_2+=x_change_2
 	cur_y_2+=y_change_2
 	
-
         def detectCollisions(x1,y1,w1,h1,x2,y2,w2,h2):
 	    
-	    if (x2+w2>=x1>=x2 and y2+h2>=y1>=y2):
-                return True
-        
+
+            if (x2+w2>=x1+w1>=x2 and y2+h2>=y1+h1>=y2):
+                return True,3
+	    elif (x2+w2>=x1>=x2 and y2+h2>=y1>=y2):
+                return True,4
             elif (x2+w2>=x1+w1>=x2 and y2+h2>=y1>=y2):
-                return True
-        
+                return True,3
             elif (x2+w2>=x1>=x2 and y2+h2>=y1+h1>=y2):
-                return True
-
-            elif (x2+w2>=x1+w1>=x2 and y2+h2>=y1+h1>=y2):
-                return True
-        
-
+                return True,3
+	    else:
+		return False,0 
 
 	if dx>=0 and ball_x>=cur_x_1 and ball_x<=cur_x_1+40 and ball_y==cur_y_1:
 		dx*=1
@@ -153,19 +150,24 @@ while not gameExit:
 	elif ball_y<0:
 		dy*=-1
 
-
-
 	ball_x+=dx
 	ball_y+=dy
 	gameDisplay.fill(white)
  	gameDisplay.blit(slider, (cur_x_1, cur_y_1))
    	gameDisplay.blit(slider2, (cur_x_2, cur_y_2))
    	for brick in brickList:
-		
-   	     if detectCollisions(ball_x, ball_y, 10,10,brick.x, brick.y, brick.width, brick.height):
-        	    brickList.remove(brick)
+	     a,b = detectCollisions(ball_x, ball_y, 10,10,brick.x, brick.y, brick.width, brick.height)
+       	     if a == True and b == 3:
+		    brickList.remove(brick)
 		    dy *= -1
+		    dx *= 1
 		    ball_y+=dy
+
+       	     elif a == True and b == 4:
+		    brickList.remove(brick)
+		    dx *= -1
+                    dy *= 1
+		    ball_x+=dx
    	pygame.draw.circle(gameDisplay, (100,90,90),(ball_x,ball_y),10,0)
 	for brick in brickList:
         	brick.render(gameDisplay)
