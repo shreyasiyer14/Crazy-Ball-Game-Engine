@@ -1,33 +1,165 @@
 import pygame
 import random
+import time
 from Brick import *
 
 pygame.init()
 white = (255,255,255)
 black = (0,0,0)
+red=(255,0,0)
+green=(0,155,0)
+yellow=(200,200,0)
 
-cur_x_1 = 400
-cur_y_1 = 550
-
-cur_x_2 = 20
-cur_y_2 = 20
-
-x_change_1=0
-y_change_1=0
-
-
-x_change_2=0
-y_change_2=0
 
 fps = pygame.time.Clock()
 gameDisplay = pygame.display.set_mode((800,600))
 
 pygame.display.set_caption('CraZY Ball')
-gameExit = False
+
+icon = pygame.image.load('Sprites/slider.bmp')
+pygame.display.set_icon(icon)
+
+smallfont=pygame.font.SysFont("comicsansms", 25)
+medfont=pygame.font.SysFont("comicsansms", 50)
+largefont=pygame.font.SysFont("comicsansms", 80)
+
+def text_objects(text,color,size):
+	if size == "small":
+		textSurface = smallfont.render(text,True,color)
+	elif size == "medium":
+		textSurface = medfont.render(text,True,color)
+	elif size == "large":
+		textSurface = largefont.render(text,True,color)
+
+	return textSurface,textSurface.get_rect()
+
+def text_to_button(msg,color,buttonx,buttony,buttonwidth,buttonheight,size="small"):
+	textSurf,textRect = text_objects(msg,color,size)
+	textRect.center = (buttonx+(buttonwidth/2)),(buttony+(buttonheight/2))
+	gameDisplay.blit(textSurf,textRect)
+
+def message_to_screen(msg,color,y_displace=0,size = "small"):
+	textSurf,textRect = text_objects(msg,color,size)
+	textRect.center =(800/2),(600/2)+y_displace
+	gameDisplay.blit(textSurf,textRect)
+
+def game_info():
+	info = True
+	while info:
+
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				pygame.quit()
+				quit()
+
+		gameDisplay.fill(black)
+		message_to_screen("Controls",red,-100,size="large")
+		message_to_screen("To move the slider up : w",red,-30)
+		message_to_screen("To move the slider down : s",red,10)
+		message_to_screen("To move the bottom slider right : right arrow key",red,50)
+		message_to_screen("To move the bottom slider left : left arrow key",red,90)
+		message_to_screen("Pause : p",red,130)
+				
+		button("Play",150,500,100,50,black,green,action="Play")
+		button("Back",350,500,100,50,black,green,action="Back")
+		button("Quit",550,500,100,50,black,green,action="Quit")
+
+		pygame.display.update()
+		fps.tick(20)
+
+def button(text,x,y,width,height,inactive_color,active_color,action=None):
+	cur=pygame.mouse.get_pos()
+	click=pygame.mouse.get_pressed()
+
+	if x<cur[0]<x+width and y<cur[1]<y+height:
+		pygame.draw.rect(gameDisplay,active_color,(x,y,width,height))
+		if click[0] == 1 and action!=None:
+			if action == "Quit":
+				pygame.quit()
+				quit()
+
+			if action == "Play":
+				gameLoop()
+
+			if action == "Info":
+				game_info()
+			
+			if action == "Back":
+				game_intro()
+	else:
+		pygame.draw.rect(gameDisplay,inactive_color,(x,y,width,height))
+
+	text_to_button(text,white,x,y,width,height)
+
+def game_intro():
+    intro = True
+    ball_x=300
+    ball_y=400
+    dx=10
+    dy=10
+	
+    while intro:
+	for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				pygame.quit()
+				quit()
+        ball_x+=dx
+	ball_y+=dy
+
+        if ball_x<=0:
+        	dx*=-1
+	elif ball_x>=790:
+                dx*=-1
+        if ball_y>=590:
+       		dy *= -1
+	elif ball_y<0:
+                dy*=-1
+        if event.type == pygame.KEYDOWN:
+				if event.key == pygame.K_s:
+					intro = False
+				if event.key == pygame.K_q:
+					pygame.quit()
+					quit()
+
+	gameDisplay.fill(black)
+	message_to_screen("Crazy Ball",red,-100,size="large")
+        pygame.draw.circle(gameDisplay, (255,255,155),(ball_x, ball_y), 10, 2)				
+	button("Play",150,500,100,50,black,green,action="Play")
+	button("Info",350,500,100,50,black,green,action="Info")
+	button("Quit",550,500,100,50,black,green,action="Quit")
+	pygame.display.update()
+	fps.tick(20)
+
+def pause():
+	paused = True
+	
+	message_to_screen("Paused",red,-100,size="medium")
+	message_to_screen("Press S to continue or Q to quit",green,25,size="small")
+	pygame.display.update()
+
+	while paused:
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				pygame.quit()
+				quit()
+
+			if event.type == pygame.KEYDOWN:
+				if event.key == pygame.K_s:
+					paused = False
+				elif event.key == pygame.K_q:
+					pygame.quit()
+					quit()
+		#gameDisplay.fill(white)		
+		fps.tick(5)
+
+
 slider = pygame.image.load('Sprites/slider.bmp')
 slider2 = pygame.transform.rotate(slider, -90)
 
-level = [
+
+
+def gameLoop():
+	level = [
         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
         [0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
@@ -48,131 +180,175 @@ level = [
         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
         [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 
-]
+	]
 
-brickList = []
+	brickList = []
 
-for y in range(len(level)):
-    for x in range(len(level[y])):
-        if (level[y][x] == 1):
-		if y==2:
-            		brickList.append(Brick(x*32, y*32,(0,0,255)))
-		if y==3:
-            		brickList.append(Brick(x*32, y*32,(0,155,105)))
-		if y==4:
-            		brickList.append(Brick(x*32, y*32,(155,0,55)))
-		if y==5:
-            		brickList.append(Brick(x*32, y*32,(155,0,155)))
-		if y==6:
-            		brickList.append(Brick(x*32, y*32,(155,155,5)))
-		if y==7:
-            		brickList.append(Brick(x*32, y*32,(25,255,5)))
-		if y==8:
-            		brickList.append(Brick(x*32, y*32,(225,205,105)))
+	for y in range(len(level)):
+    		for x in range(len(level[y])):
+        		if (level[y][x] == 1):
+				if y==2:
+        	    			brickList.append(Brick(x*32, y*32,(0,0,255)))
+				if y==3:
+        	    			brickList.append(Brick(x*32, y*32,(0,155,105)))
+				if y==4:
+        	    			brickList.append(Brick(x*32, y*32,(155,0,55)))
+				if y==5:
+        	    			brickList.append(Brick(x*32, y*32,(155,0,155)))
+				if y==6:
+       		    			brickList.append(Brick(x*32, y*32,(155,155,5)))
+				if y==7:
+       		     			brickList.append(Brick(x*32, y*32,(25,255,5)))
+				if y==8:
+       		     			brickList.append(Brick(x*32, y*32,(225,205,105)))
+
+		
+	
+	gameExit = False
+	gameOver = False
+	
+	cur_x_1 = 400
+	cur_y_1 = 550
+
+	cur_x_2 = 20
+	cur_y_2 = 20
+
+	x_change_1=0
+	y_change_1=0
 
 
-ball_x=300
-ball_y=400
-dx=10
-dy=10
-while not gameExit:
-	for event in pygame.event.get():
-		if event.type == pygame.QUIT:
-			gameExit = True
-		if event.type == pygame.KEYDOWN:
-			if event.key == pygame.K_LEFT:
-				x_change_1=-20
-				y_change_1=0
-			elif event.key == pygame.K_RIGHT:
-				x_change_1=20
-				y_change_1=0
+	x_change_2=0
+	y_change_2=0
+
+	ball_x=300
+	ball_y=400
+	dx=10
+	dy=10
+	
+	while not gameExit:
+	
+		if gameOver == True:
+			message_to_screen("Game over",red,-50,size = "large")
+			message_to_screen("Press S to play again or Q to quit",white,50,size = "medium")
+			pygame.display.update()
+
+		while gameOver == True:
+			#gameDisplay.fill(white)
 			
-			elif event.key == pygame.K_w:
-				x_change_2=0
-				y_change_2=-20
-			elif event.key == pygame.K_s:
-				x_change_2=0
-				y_change_2=20
+			for event in pygame.event.get():
+				if event.type == pygame.KEYDOWN:
+					if event.key ==	pygame.K_q:
+						gameExit = True
+						gameOver = False
+					if event.key == pygame.K_s:
+						gameLoop()	
 
-		if event.type == pygame.KEYUP:
-			if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
-				x_change_1 = 0
-				y_change_1 = 0
-       			if event.key == pygame.K_w or event.key == pygame.K_s:
-              			x_change_2 = 0
-               			y_change_2 = 0
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				gameExit = True
+			if event.type == pygame.KEYDOWN:
+				if event.key == pygame.K_LEFT:
+					x_change_1=-20
+					y_change_1=0
+				elif event.key == pygame.K_RIGHT:
+					x_change_1=20
+					y_change_1=0
+				
+				elif event.key == pygame.K_w:
+					x_change_2=0
+					y_change_2=-20
+				elif event.key == pygame.K_s:
+					x_change_2=0
+					y_change_2=20
+				elif event.key == pygame.K_p:
+					pause()
+		
+			if event.type == pygame.KEYUP:
+				if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
+					x_change_1 = 0
+					y_change_1 = 0
+       				if event.key == pygame.K_w or event.key == pygame.K_s:
+              				x_change_2 = 0
+               				y_change_2 = 0
 	
 	
-	cur_x_1+=x_change_1
-	cur_y_1+=y_change_1
-   	cur_x_2+=x_change_2
-	cur_y_2+=y_change_2
+		cur_x_1+=x_change_1
+		cur_y_1+=y_change_1
+   		cur_x_2+=x_change_2
+		cur_y_2+=y_change_2
 	
-        def detectCollisions(x1,y1,w1,h1,x2,y2,w2,h2):
+        	def detectCollisions(x1,y1,w1,h1,x2,y2,w2,h2):
 	    
 
-            if (x2+w2>=x1+w1>=x2 and y2+h2>=y1+h1>=y2):
-                return True,3
-	    elif (x2+w2>=x1>=x2 and y2+h2>=y1>=y2):
-                return True,4
-            elif (x2+w2>=x1+w1>=x2 and y2+h2>=y1>=y2):
-                return True,3
-            elif (x2+w2>=x1>=x2 and y2+h2>=y1+h1>=y2):
-                return True,3
-	    else:
-		return False,0 
+            		if (x2+w2>=x1+w1>=x2 and y2+h2>=y1+h1>=y2):
+                		return True,3
+	    		elif (x2+w2>=x1>=x2 and y2+h2>=y1>=y2):
+            		    return True,4
+            		elif (x2+w2>=x1+w1>=x2 and y2+h2>=y1>=y2):
+            		    return True,3
+            		elif (x2+w2>=x1>=x2 and y2+h2>=y1+h1>=y2):
+            		    return True,3
+	    		else:
+			    return False,0 
+		
+		
+		if dx>=0 and ball_x>=cur_x_1 and ball_x<=cur_x_1+40 and ball_y==cur_y_1:
+			dx*=1
+			dy*=-1
+		elif dx<=0 and ball_x<=cur_x_1+80 and ball_x>=cur_x_1+40 and ball_y==cur_y_1:
+			dx*=1
+			dy*=-1
+		elif dx>=0 and ball_x<=cur_x_1+80 and ball_x>=cur_x_1+40 and ball_y==cur_y_1:
+			dx*=1
+			dy*=-1
+		elif dx<=0 and ball_x<=cur_x_1+40 and ball_x>=cur_x_1 and ball_y==cur_y_1:
+			dx*=1
+			dy*=-1
 
-	if dx>=0 and ball_x>=cur_x_1 and ball_x<=cur_x_1+40 and ball_y==cur_y_1:
-		dx*=1
-		dy*=-1
-	elif dx<=0 and ball_x<=cur_x_1+80 and ball_x>=cur_x_1+40 and ball_y==cur_y_1:
-		dx*=1
-		dy*=-1
-	elif dx>=0 and ball_x<=cur_x_1+80 and ball_x>=cur_x_1+40 and ball_y==cur_y_1:
-		dx*=1
-		dy*=-1
-	elif dx<=0 and ball_x<=cur_x_1+40 and ball_x>=cur_x_1 and ball_y==cur_y_1:
-		dx*=1
-		dy*=-1
+		if ball_x==50 and ball_y<=cur_y_2+80 and ball_y>=cur_y_2:
+			dx*=-1
+			dy*=1
 
-	if ball_x==50 and ball_y<=cur_y_2+80 and ball_y>=cur_y_2:
-		dx*=-1
-		dy*=1
+		if ball_x<=0: 
+			gameOver = True
+			print "You lose"
+		elif ball_x>=790:
+			dx*=-1
+		if ball_y>=590:
+			gameOver = True
+			print "You lose"
+		elif ball_y<0:
+			dy*=-1
 
-	if ball_x<=0: 
-		gameExit = True
-		print "You lose"
-	elif ball_x>=790:
-		dx*=-1
-	if ball_y>=590:
-		gameExit = True
-		print "You lose"
-	elif ball_y<0:
-		dy*=-1
+		ball_x+=dx
+		ball_y+=dy
+		gameDisplay.fill(black)
+	 	gameDisplay.blit(slider, (cur_x_1, cur_y_1))
+	   	gameDisplay.blit(slider2, (cur_x_2, cur_y_2))
+	   	for brick in brickList:
+		     a,b = detectCollisions(ball_x, ball_y, 10,10,brick.x, brick.y, brick.width, brick.height)
+	       	     if a == True and b == 3:
+			    brickList.remove(brick)
+			    dy *= -1
+			    dx *= 1
+			    ball_y+=dy
 
-	ball_x+=dx
-	ball_y+=dy
-	gameDisplay.fill(white)
- 	gameDisplay.blit(slider, (cur_x_1, cur_y_1))
-   	gameDisplay.blit(slider2, (cur_x_2, cur_y_2))
-   	for brick in brickList:
-	     a,b = detectCollisions(ball_x, ball_y, 10,10,brick.x, brick.y, brick.width, brick.height)
-       	     if a == True and b == 3:
-		    brickList.remove(brick)
-		    dy *= -1
-		    dx *= 1
-		    ball_y+=dy
+	       	     elif a == True and b == 4:
+			    brickList.remove(brick)
+			    dx *= -1
+		            dy *= 1
+			    ball_x+=dx
+	   	pygame.draw.circle(gameDisplay, (255,255,155),(ball_x,ball_y),10,0)
+		for brick in brickList:
+			brick.render(gameDisplay)
 
-       	     elif a == True and b == 4:
-		    brickList.remove(brick)
-		    dx *= -1
-                    dy *= 1
-		    ball_x+=dx
-   	pygame.draw.circle(gameDisplay, (100,90,90),(ball_x,ball_y),10,0)
-	for brick in brickList:
-        	brick.render(gameDisplay)
+		pygame.display.update()
+		fps.tick(120)
 
-	pygame.display.update()
-	fps.tick(60)
-pygame.quit()
-quit()
+	
+	pygame.quit()
+	quit()	
+
+
+game_intro()
+gameLoop()
