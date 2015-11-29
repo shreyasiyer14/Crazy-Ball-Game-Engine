@@ -286,18 +286,18 @@ def gameLoop():
 				gameExit = True
 			if event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_LEFT:
-					x_change_1=-20
+					x_change_1=-10
 					y_change_1=0
 				elif event.key == pygame.K_RIGHT:
-					x_change_1=20
+					x_change_1=10
 					y_change_1=0
 				
 				elif event.key == pygame.K_w:
 					x_change_2=0
-					y_change_2=-20
+					y_change_2=-10
 				elif event.key == pygame.K_s:
 					x_change_2=0
-					y_change_2=20
+					y_change_2=10
 				elif event.key == pygame.K_p:
 					pause()
 		
@@ -318,14 +318,14 @@ def gameLoop():
 		a1,b1=detectCollisions(ball_x, ball_y, 10,10,cur_x_1, cur_y_1-12,80, 15)
 		if a1 == True:
 			dy*=-1
-			dx*=1
+			dx = dx + (ball_x - cur_x_1-50)/25 - x_change_1/3
 			pygame.mixer.music.load('Sounds/Boing.mp3')
 			pygame.mixer.music.play(1)
 		
 		a2,b2 = detectCollisions(ball_x, ball_y, 10,10, cur_x_2,cur_y_2, 25,80)
 		if a2==True:
 			dx*=-1
-			dy *= 1
+			dy = dy + (ball_y - cur_y_2 -50)/25 - y_change_2/3
 			pygame.mixer.music.load('Sounds/Boing.mp3')
 			pygame.mixer.music.play(1)
 			
@@ -340,8 +340,8 @@ def gameLoop():
 			gameOver = True
 		elif ball_y<0:
 		
-			pygame.mixer.music.load('Sounds/Boing.mp3')
-			pygame.mixer.music.play(1)
+			#pygame.mixer.music.load('Sounds/Boing.mp3')
+			#pygame.mixer.music.play(1)
 			dy*=-1
 
 		ball_x+=dx
