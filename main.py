@@ -187,10 +187,11 @@ def pause():
 		#gameDisplay.fill(white)		
 		fps.tick(5)
 
-def levelcomplete():
+def levelcomplete(count):
     paused = True
     message_to_screen("Congratulations!",white,-100,size="large")
-    message_to_screen("You Win!",(155,155,155),-50,size="medium")
+    message_to_screen("You Win!",(155,155,155),-50,size="medium")  
+    score(count)    
     message_to_screen("Press S to continue or Q to quit",green,25,size="small")
     pygame.display.update()
         
@@ -370,10 +371,9 @@ def gameLoop():
 		spriteball.x=ball_x
 		spriteball.y=ball_y
 		spriteball.update(gameDisplay)
-	   #	pygame.draw.circle(gameDisplay, (155,155,155),(ball_x,ball_y),10,0)
 		
 	        if len(brickList)==0:
-        	    levelcomplete()
+        	    levelcomplete(count)
 		for brick in brickList:
 	            brick.render(gameDisplay)
 	       	    score(count)
