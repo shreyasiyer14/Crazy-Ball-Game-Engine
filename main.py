@@ -23,8 +23,8 @@ pygame.display.set_icon(icon)
 smallfont=pygame.font.SysFont("comicsansms", 25)
 medfont=pygame.font.SysFont("comicsansms", 50)
 largefont=pygame.font.SysFont("comicsansms", 80)
-#pygame.mixer.init(frequency=44100, size=-16,channels= 2, buffer=4096)
-#pygame.mixer.music.load('Sounds/BeatWave.mp3')
+pygame.mixer.init(frequency=44100, size=-16,channels= 2, buffer=4096)
+pygame.mixer.music.load('Sounds/BeatWave.mp3')
 
 def text_objects(text,color,size):
 	if size == "small":
@@ -102,8 +102,8 @@ def game_intro():
     ball_x=random.randrange(5,500)
     ball_y=random.randrange(5,500)
     dx=random.randrange(-10,10)
-    dy=random.randrange(-10,10)
- #   pygame.mixer.music.play(2)
+    dy=random.randrange(1,10)
+    pygame.mixer.music.play(2)
     while intro:
 	for event in pygame.event.get():
 			if event.type == pygame.QUIT:
@@ -159,7 +159,9 @@ def pause():
 		fps.tick(5)
 
 def levelcomplete():
-    message_to_screen("Congratulations! You Win!",white,-100,size="large")
+    paused = True
+    message_to_screen("Congratulations!",white,-100,size="large")
+    message_to_screen("You Win!",(155,155,155),-50,size="medium")
     message_to_screen("Press S to continue or Q to quit",green,25,size="small")
     pygame.display.update()
         
@@ -197,36 +199,18 @@ def detectCollisions(x1,y1,w1,h1,x2,y2,w2,h2):
 
 def gameLoop():
         count = 0
-        '''
+        
   #  	pygame.mixer.music.stop()
 	randIndex = random.randrange(0,3)
         level_obj = Level(randIndex)
         level = level_obj.levels()
-'''
-        level = [[0,0,0],
-             [0,0,0],
-            [1,0,0],]
 	brickList = []
 
 	for y in range(len(level)):
+		color = (random.randrange(50,200),random.randrange(50,200),random.randrange(50,100))
     		for x in range(len(level[y])):
         		if (level[y][x] == 1):
-				if y==2:
-        	    			brickList.append(Brick(x*32, y*32,(0,0,255)))
-				if y==3:
-        	    			brickList.append(Brick(x*32, y*32,(0,155,105)))
-				if y==4:
-        	    			brickList.append(Brick(x*32, y*32,(155,0,55)))
-				if y==5:
-        	    			brickList.append(Brick(x*32, y*32,(155,0,155)))
-				if y==6:
-       		    			brickList.append(Brick(x*32, y*32,(155,155,5)))
-				if y==7:
-       		     			brickList.append(Brick(x*32, y*32,(25,255,5)))
-				if y==8:
-       		     			brickList.append(Brick(x*32, y*32,(225,205,105)))
-
-		
+        	    			brickList.append(Brick(x*32, y*32,color))
 	
 	gameExit = False
 	gameOver = False
@@ -248,8 +232,8 @@ def gameLoop():
 	ball_y=random.randrange(250,500)
 	
 	spriteball = Sprite(ball_x, ball_y)
-	dx=random.randrange(-10,10)
-	dy=random.randrange(-10,10)
+	dx=random.randrange(-5,5)
+	dy=random.randrange(1,5)
 	
 	while not gameExit:
 	        pygame.draw.circle(gameDisplay, white, (0,0),10,0)
@@ -301,33 +285,33 @@ def gameLoop():
    		cur_x_2+=x_change_2
 		cur_y_2+=y_change_2
 		
-		a1,b1=detectCollisions(ball_x, ball_y, 10,10,cur_x_1, cur_y_1,80, 15)
+		a1,b1=detectCollisions(ball_x, ball_y, 10,10,cur_x_1, cur_y_1-12,80, 15)
 		if a1 == True:
 			dy*=-1
 			dx*=1
-			#pygame.mixer.music.load('Sounds/Boing.mp3')
-			#pygame.mixer.music.play(1)
+			pygame.mixer.music.load('Sounds/Boing.mp3')
+			pygame.mixer.music.play(1)
 		
 		a2,b2 = detectCollisions(ball_x, ball_y, 10,10, cur_x_2,cur_y_2, 25,80)
 		if a2==True:
 			dx*=-1
 			dy *= 1
-			#pygame.mixer.music.load('Sounds/Boing.mp3')
-			#pygame.mixer.music.play(1)
+			pygame.mixer.music.load('Sounds/Boing.mp3')
+			pygame.mixer.music.play(1)
 			
 		if ball_x<=0: 
 			gameOver = True
 		elif ball_x>=790:
 			
-		#	pygame.mixer.music.load('Sounds/Boing.mp3')
-		#	pygame.mixer.music.play(1)
+			pygame.mixer.music.load('Sounds/Boing.mp3')
+			pygame.mixer.music.play(1)
 			dx*=-1
 		if ball_y>=590:
 			gameOver = True
 		elif ball_y<0:
 		
-		#	pygame.mixer.music.load('Sounds/Boing.mp3')
-		#	pygame.mixer.music.play(1)
+			pygame.mixer.music.load('Sounds/Boing.mp3')
+			pygame.mixer.music.play(1)
 			dy*=-1
 
 		ball_x+=dx
@@ -342,8 +326,8 @@ def gameLoop():
 			    dy *= -1
 			    dx *= 1
             	   	    count+=1
-		#	    pygame.mixer.music.load('Sounds/brick.mp3')
-		#	    pygame.mixer.music.play(1)
+			    pygame.mixer.music.load('Sounds/brick.mp3')
+			    pygame.mixer.music.play(1)
 			    ball_y+=dy
 
 	       	     elif a == True and b == 4:
@@ -351,17 +335,17 @@ def gameLoop():
 			    dx *= -1
 		            dy *= 1
 	                    count+=1
-		#	    pygame.mixer.music.load('Sounds/brick.mp3')
-		#	    pygame.mixer.music.play(1)
+			    pygame.mixer.music.load('Sounds/brick.mp3')
+			    pygame.mixer.music.play(1)
 			    ball_x+=dx
 		spriteball.x=ball_x
 		spriteball.y=ball_y
-		#spriteball.update(gameDisplay)
-	   	pygame.draw.circle(gameDisplay, (155,155,155),(ball_x,ball_y),10,0)
+		spriteball.update(gameDisplay)
+	   #	pygame.draw.circle(gameDisplay, (155,155,155),(ball_x,ball_y),10,0)
+		
+	        if len(brickList)==0:
+        	    levelcomplete()
 		for brick in brickList:
-                    print len(brickList)
-	            if len(brickList)==0:
-        	        levelcomplete()
 	            brick.render(gameDisplay)
 	       	    score(count)
 		pygame.display.update()
