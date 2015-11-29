@@ -4,6 +4,7 @@ import time
 from Brick import *
 from Level import *
 from Sprite import *
+from IntroCircle import *
 pygame.init()
 white = (255,255,255)
 black = (0,0,0)
@@ -23,8 +24,8 @@ pygame.display.set_icon(icon)
 smallfont=pygame.font.SysFont("comicsansms", 25)
 medfont=pygame.font.SysFont("comicsansms", 50)
 largefont=pygame.font.SysFont("comicsansms", 80)
-pygame.mixer.init(frequency=44100, size=-16,channels= 2, buffer=4096)
-pygame.mixer.music.load('Sounds/BeatWave.mp3')
+#pygame.mixer.init(frequency=44100, size=-16,channels= 2, buffer=4096)
+#pygame.mixer.music.load('Sounds/BeatWave.mp3')
 
 def text_objects(text,color,size):
 	if size == "small":
@@ -97,14 +98,24 @@ def button(text,x,y,width,height,inactive_color,active_color,action=None):
 
 	text_to_button(text,white,x,y,width,height)
 
+randcirclelist = []
 def game_intro():
-    intro = True
+    intro = True 
     ball_x=random.randrange(5,500)
     ball_y=random.randrange(5,500)
+
+    ball_x2=random.randrange(5,500)
+    ball_y2=random.randrange(5,500)
     dx=random.randrange(-10,10)
     dy=random.randrange(1,10)
-    pygame.mixer.music.play(2)
+
+    dx2=random.randrange(-10,10)
+    dy2=random.randrange(1,10)
+ #   pygame.mixer.music.play(2)
     while intro:
+	randcircle = IntroCircle(5)
+	randcirclelist.append(randcircle)
+	
 	for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				pygame.quit()
@@ -118,6 +129,9 @@ def game_intro():
 
         ball_x+=dx
 	ball_y+=dy
+	
+        ball_x2+=dx2
+	ball_y2+=dy2
         if ball_x<=0:
         	dx*=-1
 	elif ball_x>=790:
@@ -127,9 +141,24 @@ def game_intro():
 	elif ball_y<0:
                 dy*=-1
 
+        if ball_x2<=0:
+        	dx2*=-1
+	elif ball_x2>=790:
+                dx2*=-1
+        if ball_y2>=590:
+       		dy2 *= -1
+	elif ball_y2<0:
+                dy2*=-1
+
 	gameDisplay.fill(black)
-	message_to_screen("Crazy Ball",red,-100,size="large")
-        pygame.draw.circle(gameDisplay, (255,255,155),(ball_x, ball_y), 10, 2)				
+	message_to_screen("Crazy Ball",(255,100,100),-100,size="large")
+        pygame.draw.circle(gameDisplay, (255,255,155),(ball_x, ball_y), 10, 2)
+        pygame.draw.circle(gameDisplay, (255,255,155),(ball_x2, ball_y2), 10, 2)				
+	for circle in randcirclelist:
+		circle.update()
+		if circle.radius >= 500:	
+			randcirclelist.remove(circle)
+		circle.render(gameDisplay)
 	button("Play",150,500,100,50,(150,50,50),green,action="Play")
 	button("Info",350,500,100,50,(50,150,50),green,action="Info")
 	button("Quit",550,500,100,50,(50,50,150),green,action="Quit")
