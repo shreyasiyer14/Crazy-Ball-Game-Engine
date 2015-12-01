@@ -12,10 +12,28 @@ This game was made in Python using PyGame module.
 
 
 <b><u>Instructions:</u></b>
+1) Run the 'bootstrap.sh' script file. (Create an executable using chmod)  <br>
+2) Run 'main.py' file using python main.py. <br>
+3) Profit! <br>
 
-1) Run 'main.py' file using python main.py.
-2) Profit!
+This code is hosted on my Github account. www.github.com/djeof-1
+
+
+<br>
 
 <b>Note</b>
 Make sure that you have Python 2.7 (32-bit) installed on your system.) Or else, you could just download pygame2exe application from www.pygame.org and convert the python file into an executable.
+
+
+<br> <br>
+<b>Members</b>
+
+1) Shreyas Srinivasan Iyer (IMT2015018)
+<br>
+
+2) Kashish Jain (IMT2015020)
+
+<br>
+
+3) Harsha Vardhan
 
