@@ -34,8 +34,8 @@ medfont=pygame.font.SysFont("courier", 50)
 largefont=pygame.font.SysFont("courier", 80)
 
 #Load music files.
-#pygame.mixer.init(frequency=44100, size=-16,channels= 2, buffer=4096)
-#pygame.mixer.music.load('Sounds/BeatWave.mp3')
+pygame.mixer.init(frequency=44100, size=-16,channels= 2, buffer=4096)
+pygame.mixer.music.load('Sounds/BeatWave.mp3')
 
 #Multithreading music sounds, to play continuously in the background.
 def gameSound():
@@ -135,7 +135,7 @@ def game_intro():
 
     dx2=random.randrange(-10,10)
     dy2=random.randrange(1,10)
-#    pygame.mixer.music.play(-1)
+    pygame.mixer.music.play(-1)
     
     while intro:
 	#Initialize a Circle object, and append it to a list.
@@ -278,7 +278,7 @@ def gameLoop():
 	cur_y_1 = 550
 
 	cur_x_2 = 20
-	cur_y_2 = 20
+	cur_y_2 = 300
 
 	x_change_1=0
 	y_change_1=0
@@ -294,8 +294,8 @@ def gameLoop():
 	spriteball = Sprite(ball_x, ball_y)
 	#dx=random.randrange(3,5)
 	#dy=random.randrange(3,5)
-	dy = 5
-	dx = 5
+	dy = 7
+	dx = 7
     	
 	while not gameExit:
 	        pygame.draw.circle(gameDisplay, white, (0,0),10,0)
@@ -319,18 +319,18 @@ def gameLoop():
 		#Keyboard events.
 			if event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_LEFT:
-					x_change_1=-10
+					x_change_1=-15
 					y_change_1=0
 				elif event.key == pygame.K_RIGHT:
-					x_change_1=10
+					x_change_1=15
 					y_change_1=0
 				
-				elif event.key == pygame.K_w:
+				elif event.key == pygame.K_UP:
 					x_change_2=0
-					y_change_2=-10
-				elif event.key == pygame.K_s:
+					y_change_2=-15
+				elif event.key == pygame.K_DOWN:
 					x_change_2=0
-					y_change_2=10
+					y_change_2=15
 				elif event.key == pygame.K_p:
 					pause()
 		
@@ -338,7 +338,7 @@ def gameLoop():
 				if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
 					x_change_1 = 0
 					y_change_1 = 0
-       				if event.key == pygame.K_w or event.key == pygame.K_s:
+       				if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
               				x_change_2 = 0
                				y_change_2 = 0
 	
