@@ -20,11 +20,10 @@ This game was made in Python using PyGame module.
 Make sure that you have Python 2.7 (32-bit) installed on your system.) Or else, you could just download pygame2exe application from www.pygame.org and convert the python file into an executable.
 
 <br> <br>
-<b>Members</b>
-
-1) Shreyas Srinivasan Iyer (IMT2015018)
-<br>
-2) Kashish Jain (IMT2015020)
-<br>
-3) Harsha Vardhan
+<b>Project Team</b>
+<ul>
+<li> Shreyas Srinivasan Iyer (IMT2015018) </li>
+<li>Kashish Jain (IMT2015020) </li>
+<li> Harsha Vardhan </li> 
+</ul>
 
